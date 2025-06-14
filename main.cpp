@@ -4,37 +4,49 @@
 #include "ray.h"
 using namespace std;
 
-
-bool hit_sphere(const point3& center, double radius, const ray& r){
+//shape
+double hit_sphere(const point3& center, double radius, const ray& r){
     auto oc = center - r.origin();
     auto a = dot(r.direction(), r.direction());
-    auto b = -2 * dot(r.direction(), oc);
+    auto b = -2.0 * dot(r.direction(), oc);
     auto c = dot(oc,oc) - radius * radius;
 
     auto discriminant = b*b - 4*a*c;
-    return (discriminant >= 0);
+    if(discriminant < 0) return -1.0;
+    else{
+        return (-b - sqrt(discriminant))/(2.0*a);
+    }
 }
 
+// set color
 color color_ray(const ray& r){
-    if(hit_sphere(point3(0,0,-1) , 0.5, r)) return color(1, 0, 0);
+    auto t = hit_sphere(point3(0,0,-1) , 0.5, r);
+    if( t > 0.0){
+        vec3 N = unit_vector(r.at(t) - vec3(0,0,-1)) ;
+        return 0.5 * color(N.x() + 1, N.y() + 1, N.z() + 1);
+    }
 
     vec3 unit_dir = unit_vector(r.direction());
-    auto a = 0.5 * (unit_dir.y() + 1);
-    return (1 - a) * color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
+    auto a = 0.5 * (unit_dir.y() + 1.0);
+    return (1.0 - a) * color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
 }
 
 int main() {
 
-    auto aspect_ratio = 16/9;
-    int image_width = 1096;
+    auto aspect_ratio = 16.0/9.0;
+    int image_width = 1920;
 
     int image_height = int(image_width / aspect_ratio);
     image_height = (image_height < 1)? 1 : image_height;
     
+    // camera
+
     auto focal_length = 1.0;
     auto viewport_height = 2.0;
     auto viewport_width = viewport_height * (double(image_width)/image_height);
     auto camera_center = point3(0, 0, 0);
+
+    // viewport
 
     auto viewport_u = vec3(viewport_width, 0, 0);
     auto viewport_v = vec3(0, -viewport_height, 0);
@@ -45,7 +57,7 @@ int main() {
     auto viewport_upper_left = camera_center - vec3(0, 0, focal_length) - viewport_u/2 - viewport_v/2;
     auto pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
-
+    // render
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
    for (int j = 0; j < image_height; ++j) {
@@ -59,7 +71,6 @@ int main() {
             color pixel_color = color_ray(r);
             write_color(cout, pixel_color);
         }
-            cout << "\n";
     }
 
     std::clog << "\rDone.                 \n";
