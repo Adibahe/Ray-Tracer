@@ -8,13 +8,13 @@ using namespace std;
 double hit_sphere(const point3& center, double radius, const ray& r){
     auto oc = center - r.origin();
     auto a = dot(r.direction(), r.direction());
-    auto b = -2.0 * dot(r.direction(), oc);
+    auto h = dot(r.direction(), oc);
     auto c = dot(oc,oc) - radius * radius;
 
-    auto discriminant = b*b - 4*a*c;
+    auto discriminant = h*h - a*c;
     if(discriminant < 0) return -1.0;
     else{
-        return (-b - sqrt(discriminant))/(2.0*a);
+        return (h - sqrt(discriminant))/(a);
     }
 }
 
@@ -34,7 +34,7 @@ color color_ray(const ray& r){
 int main() {
 
     auto aspect_ratio = 16.0/9.0;
-    int image_width = 1920;
+    int image_width = 400;
 
     int image_height = int(image_width / aspect_ratio);
     image_height = (image_height < 1)? 1 : image_height;
