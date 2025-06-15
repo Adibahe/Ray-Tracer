@@ -24,7 +24,7 @@ inline double degrees_to_radians(double degrees){
 }
 
 inline double random_double(){
-    return rand()/(RAND_MAX + 1);
+    return rand()/(RAND_MAX + 1.0);
 }
 
 inline double random_double(double min, double max){
@@ -33,9 +33,9 @@ inline double random_double(double min, double max){
 
 // common headers
 
-#include "color.h"
-#include "ray.h"
 #include "interval.h"
+#include "ray.h"
 #include "vec3.h"
+#include "color.h"
 
 #endif
