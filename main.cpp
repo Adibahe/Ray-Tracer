@@ -2,7 +2,6 @@
 #include<iostream>
 #include "hittable.h"
 #include "hittable_list.h"
-#include "interval.h"
 #include "sphere.h"
 #include <memory>
 
@@ -37,7 +36,7 @@ int main() {
     auto focal_length = 1.0;
     auto viewport_height = 2.0;
     auto viewport_width = viewport_height * (double(image_width)/image_height);
-    auto camera_center = point3(0, 0, 0);
+    auto camera_center = point3(100, 0, 0);
 
     // viewport
 
