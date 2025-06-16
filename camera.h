@@ -9,7 +9,8 @@ class camera {
     double aspect_ratio = 1.0; 
     int image_width  = 100;
     int samples_per_pixel = 10;
-    point3 center; 
+    point3 center;
+    int max_depth = 10;
 
     void render(const hittable& world) {
         initialize();
@@ -21,7 +22,7 @@ class camera {
             for (int i = 0; i < image_width; i++) {
                 color pixel_color(0,0,0);
                 for(int sample = 0; sample < samples_per_pixel; sample++){
-                    pixel_color += color_ray(get_ray(i,j), world);
+                    pixel_color += color_ray(get_ray(i,j), max_depth, world);
                 }
                 write_color(cout, pixel_samples_scale * pixel_color);
             }
@@ -70,11 +71,15 @@ class camera {
         return vec3(random_double() - 0.5 , random_double() - 0.5, 0);
     }
 
-    color color_ray(const ray& r, const hittable& world) const{
+    color color_ray(const ray& r, int depth, const hittable& world) const{
+        
+        if(depth <= 0 ) return color(0,0,0);
+
         hit_record rec;
+
         if(world.hit(r, interval(0, infinity), rec)){
             vec3 direction = random_on_hemisphere(rec.normal);
-            return 0.5 * (color_ray(ray(rec.p, direction),world));
+            return 0.5 * (color_ray(ray(rec.p, direction),depth - 1, world));
         }
 
         vec3 unit_dir = unit_vector(r.direction());
