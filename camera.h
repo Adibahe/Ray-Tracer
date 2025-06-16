@@ -8,7 +8,8 @@ class camera {
 
     double aspect_ratio = 1.0; 
     int image_width  = 100;
-    int samples_per_pixel = 10; 
+    int samples_per_pixel = 10;
+    point3 center; 
 
     void render(const hittable& world) {
         initialize();
@@ -31,8 +32,7 @@ class camera {
     }
 
   private:
-    int    image_height;   
-    point3 center;     
+    int    image_height;        
     point3 pixel00_loc;    
     vec3   pixel_delta_u;  
     vec3   pixel_delta_v;
@@ -43,8 +43,6 @@ class camera {
         image_height = (image_height < 1) ? 1 : image_height;
 
         pixel_samples_scale = 1.0 / samples_per_pixel;
-
-        center = point3(0, 0, 0);
 
         auto focal_length = 1.0;
         auto viewport_height = 2.0;
