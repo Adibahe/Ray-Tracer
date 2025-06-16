@@ -1,6 +1,7 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#include "interval.h"
 #include "vec3.h"
 
 
@@ -16,7 +17,7 @@ void write_color(ostream& out, const color& pixel_color){
     int gbyte = int(255.999 * intensity.clamp(g));
     int bbyte = int(255.999 * intensity.clamp(b));
 
-    out << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
+    out << rbyte << ' ' << gbyte << ' ' << bbyte <<' ';
 }
 
 #endif
