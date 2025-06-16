@@ -109,4 +109,11 @@ inline vec3 random_unit_vector(){
         if( 1e-160 < len <= 1) return p/sqrt(len);
     }
 }
+
+inline vec3 random_on_hemisphere(const vec3& normal){
+    vec3 rand_vec = random_unit_vector();
+    if(dot(rand_vec, normal) > 0.0)
+        return rand_vec;
+    else return -rand_vec;
+}
 #endif
