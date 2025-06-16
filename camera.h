@@ -63,7 +63,6 @@ class camera {
         auto offset = sample_square();
         auto pixel_sample = pixel00_loc + ((i + offset.x()) * pixel_delta_u) + ((j + offset.y()) * pixel_delta_v);
         
-        
         return ray (center, pixel_sample - center);
     }
 
