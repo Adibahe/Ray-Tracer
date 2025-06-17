@@ -12,7 +12,7 @@ class sphere : public hittable{
         shared_ptr<material> mat;
 
     public:
-        sphere(const point3& center, double radius) : center(center), radius(fmax(0,radius)){}
+        sphere(const point3& center, double radius, shared_ptr<material> mat) : center(center), radius(fmax(0,radius)), mat(mat){}
         
         bool hit(const ray& r, interval ray_t, hit_record& rec ) const override{
             auto oc = center - r.origin();

@@ -116,4 +116,8 @@ inline vec3 random_on_hemisphere(const vec3& normal){
         return rand_vec;
     else return -rand_vec;
 }
+
+inline vec3 reflection(const vec3& v, const vec3& n){
+    return v - 2*dot(v,n)*n;
+}
 #endif
