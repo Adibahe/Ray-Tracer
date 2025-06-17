@@ -1,0 +1,40 @@
+#ifndef MATERIAL_H
+#define MATERIAL_H
+
+#include "hittable.h"
+
+class material{
+    public:
+        virtual ~material() = default;
+
+        virtual bool scatter(const ray& ray_in, const hit_record& rec, color& attenuation, ray& scattered) const{
+            return false; 
+        }
+};
+
+class lambertian : public material{
+    public:
+        lambertian(const color& albedo) : albedo(albedo){}
+
+        bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override{
+            double p = 0.8;
+            double s = 1e-8;
+
+            auto scatter_direction = rec.normal + random_unit_vector();
+
+            if(fabs(scatter_direction.e[0]) < s && fabs(scatter_direction.e[1]) < s && fabs(scatter_direction.e[2]) < s){
+                scatter_direction = rec.normal;
+            }
+            scattered = ray(rec.p, scatter_direction);
+            if(random_double() < p){
+                attenuation = albedo / p;
+            }
+                attenuation = albedo;
+                return true;
+        }
+
+    private:
+        color albedo;
+};
+
+#endif
