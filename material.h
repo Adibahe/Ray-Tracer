@@ -42,7 +42,7 @@ class metal : public material{
         double p = 0.3;
         metal(const color& albedo, double fuzz_f): albedo(albedo), fuzz_factor(fuzz_f < 1 ? fuzz_f: 1){}
 
-        bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override{
+                bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override{
             vec3 reflected = reflection(r_in.direction(),rec.normal);
             reflected = unit_vector(reflected) + (fuzz_factor * random_unit_vector());
             scattered = ray(rec.p, reflected);
@@ -57,6 +57,35 @@ class metal : public material{
     private:
         color albedo;
         double fuzz_factor;
+};
+
+class dielectric : public material{
+    public: 
+
+        dielectric(double refractive_index): refractive_index(refractive_index){}
+
+        bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)const override{
+            attenuation = color(1.0, 1.0, 1.0);
+            double ri = rec.front_face ? (1.0/ refractive_index) : refractive_index;
+
+            vec3 unit_dir = unit_vector(r_in.direction());
+            double cos_theta = std::fmin(dot(-unit_dir, rec.normal), 1.0);
+            double sin_theta = std::sqrt(1.0 - cos_theta*cos_theta);
+
+            vec3 direction;
+            if(ri * sin_theta > 1.0){
+                direction = reflection(unit_dir, rec.normal);
+            }
+            else{
+                direction = refract(unit_dir, rec.normal, ri, cos_theta);
+            }
+
+            scattered = ray(rec.p, direction);
+            return true;
+        }
+
+    private:
+        double refractive_index;
 };
 
 #endif

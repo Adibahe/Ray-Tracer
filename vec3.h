@@ -120,4 +120,10 @@ inline vec3 random_on_hemisphere(const vec3& normal){
 inline vec3 reflection(const vec3& v, const vec3& n){
     return v - 2*dot(v,n)*n;
 }
+
+inline vec3 refract(const vec3& ray, const vec3& n, double etai_by_etat, double cos_theta){
+    vec3 ray_out_prep = etai_by_etat*(ray + cos_theta * n);
+    vec3 ray_out_parallel = -sqrt(fabs(1.0 - ray_out_prep.length_squared()))*n;
+    return ray_out_parallel + ray_out_prep;
+}
 #endif
