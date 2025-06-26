@@ -42,17 +42,17 @@ class metal : public material{
         double p = 0.3;
         metal(const color& albedo, double fuzz_f): albedo(albedo), fuzz_factor(fuzz_f < 1 ? fuzz_f: 1){}
 
-                bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override{
-            vec3 reflected = reflection(r_in.direction(),rec.normal);
-            reflected = unit_vector(reflected) + (fuzz_factor * random_unit_vector());
-            scattered = ray(rec.p, reflected);
+            bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override{
+                vec3 reflected = reflection(r_in.direction(),rec.normal);
+                reflected = unit_vector(reflected) + (fuzz_factor * random_unit_vector());
+                scattered = ray(rec.p, reflected);
 
-            if(random_double() < p){
-                attenuation = albedo / p;
+                if(random_double() < p){
+                    attenuation = albedo / p;
+                }
+                attenuation = albedo;
+                return (dot(scattered.direction(), rec.normal) > 0);
             }
-            attenuation = albedo;
-            return (dot(scattered.direction(), rec.normal) > 0);
-        }
 
     private:
         color albedo;
