@@ -126,4 +126,12 @@ inline vec3 refract(const vec3& ray, const vec3& n, double etai_by_etat, double 
     vec3 ray_out_parallel = -sqrt(fabs(1.0 - ray_out_prep.length_squared()))*n;
     return ray_out_parallel + ray_out_prep;
 }
+
+inline vec3 random_in_unit_disk(){
+    while(true){
+        auto p = vec3(random_double(-1,1), random_double(-1,1), 0);
+        if(p.length_squared() < 1)
+            return p;
+    }
+}
 #endif
